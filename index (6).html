@@ -1,0 +1,929 @@
+<html lang="fr"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Personnels et Salaires</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background: #f0f4f8;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+    
+        header {
+            background: linear-gradient(to right, #1a2a3b, #2c3e50);
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            border-bottom: 3px solid #3498db;
+        }
+    
+        header h1 {
+            margin: 0;
+            font-size: 2em;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+    
+        .container {
+            max-width: 90%;
+            margin: 30px auto;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+    
+        h2 {
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 35px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 1.6em;
+            letter-spacing: 0.5px;
+        }
+    
+        form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            margin-bottom: 35px;
+            align-items: flex-end;
+            background: #f9fbfc;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+        }
+    
+        .form-group {
+            flex: 1;
+            min-width: 220px;
+        }
+    
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #34495e;
+        }
+    
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group input[type="date"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #dfe6e9;
+            border-radius: 6px;
+            font-size: 1em;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            background: #fff;
+        }
+    
+        .form-group input[type="text"]:focus,
+        .form-group input[type="number"]:focus,
+        .form-group input[type="date"]:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+            outline: none;
+        }
+    
+        button.submit-btn {
+            background: #3498db;
+            border: none;
+            padding: 12px 25px;
+            color: #fff;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: background 0.3s ease, transform 0.2s, box-shadow 0.3s;
+            box-shadow: 0 3px 10px rgba(52, 152, 219, 0.2);
+        }
+    
+        button.submit-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+    
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 15px;
+            font-size: 0.95em;
+            background: #fff;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+    
+        table thead {
+            background: #000000;
+            color: #ffffff;
+        }
+    
+        th, td {
+            padding: 14px;
+            border-bottom: 1px solid #eceff1;
+            text-align: center;
+            font-size: 0.95em;
+            max-width: 150px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    
+        th {
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+    
+        tbody tr {
+            transition: background 0.2s ease;
+        }
+    
+        tbody tr:hover {
+            background: #f5f7fa;
+        }
+    
+        .delete-btn {
+            background: #e74c3c;
+            border: none;
+            padding: 6px 12px;
+            color: #fff;
+            font-size: 0.85em;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background 0.3s ease, transform 0.2s;
+        }
+    
+        .delete-btn:hover {
+            background: #c0392b;
+            transform: scale(1.05);
+        }
+    
+        .edit-btn {
+            background: #2ecc71;
+            border: none;
+            padding: 6px 12px;
+            color: #fff;
+            font-size: 0.85em;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background 0.3s ease, transform 0.2s;
+        }
+    
+        .edit-btn:hover {
+            background: #27ae60;
+            transform: scale(1.05);
+        }
+    
+        .actions {
+            text-align: center;
+            margin-top: 40px;
+        }
+    
+        #save-btn {
+            background: #9b59b6;
+            border: none;
+            padding: 14px 30px;
+            color: #fff;
+            font-size: 1.1em;
+            cursor: pointer;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: background 0.3s ease, transform 0.2s, box-shadow 0.3s;
+            box-shadow: 0 3px 10px rgba(155, 89, 182, 0.2);
+        }
+    
+        #save-btn:hover {
+            background: #8e44ad;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(155, 89, 182, 0.4);
+        }
+    
+        tfoot {
+            background: #f5f7fa;
+            font-weight: bold;
+            display: none;
+        }
+    
+        tfoot td {
+            color: #e74c3c;
+            font-size: 1.1em;
+        }
+    
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+    
+        .modal {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            max-width: 350px;
+            width: 90%;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+    
+        .modal h3 {
+            margin-top: 0;
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #34495e;
+        }
+    
+        .modal .form-group {
+            margin-bottom: 20px;
+        }
+    
+        .modal label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #2c3e50;
+        }
+    
+        .modal input[type="date"],
+        .modal input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 0.95em;
+            border: 2px solid #dfe6e9;
+            border-radius: 6px;
+            transition: border-color 0.3s ease;
+        }
+    
+        .modal input[type="date"]:focus,
+        .modal input[type="number"]:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+    
+        .modal-actions {
+            text-align: right;
+            margin-top: 25px;
+        }
+    
+        .modal-actions button {
+            background: #3498db;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 0.95em;
+            transition: background 0.3s ease, transform 0.2s;
+        }
+    
+        .modal-actions button:hover {
+            background: #2980b9;
+            transform: scale(1.05);
+        }
+    
+        #download-pdf-btn, #download-invoice-pdf-btn {
+            background: #e67e22;
+            border: none;
+            padding: 12px 25px;
+            color: #fff;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 6px;
+            font-weight: 600;
+            margin-top: 25px;
+            transition: background 0.3s ease, transform 0.2s, box-shadow 0.3s;
+            box-shadow: 0 3px 10px rgba(230, 126, 34, 0.2);
+        }
+    
+        #download-pdf-btn:hover, #download-invoice-pdf-btn:hover {
+            background: #d35400;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(230, 126, 34, 0.4);
+        }
+    
+        .week-days {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+    
+        .week-days label {
+            font-weight: normal;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #34495e;
+        }
+    
+        @media(max-width: 600px) {
+            .form-group {
+                min-width: 100%;
+            }
+            form {
+                flex-direction: column;
+                padding: 15px;
+            }
+            th, td {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+            table {
+                font-size: 0.9em;
+            }
+            header h1 {
+                font-size: 1.5em;
+            }
+            h2 {
+                font-size: 1.4em;
+            }
+            button.submit-btn, #save-btn {
+                font-size: 0.95em;
+                padding: 10px 20px;
+            }
+            .edit-btn, .delete-btn {
+                font-size: 0.8em;
+                padding: 5px 8px;
+            }
+            .modal {
+                padding: 20px;
+            }
+        }
+    </style>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    </head><body>
+    <header>
+        <h1>Gestion des Personnels et Salaires</h1>
+    </header>
+    
+    <!-- Section ouvriers payés par semaine -->
+    <div class="container" id="weekly-container">
+        <h2>Ajouter un Ouvrier (Payé par semaine)</h2>
+        <form id="add-weekly-worker-form">
+            <div class="form-group">
+                <label for="weeklyName">Nom de l'ouvrier :</label>
+                <input type="text" id="weeklyName" required="" placeholder="Ex: Mohamed">
+            </div>
+            <div class="form-group">
+                <label for="weeklyRole">Rôle :</label>
+                <input type="text" id="weeklyRole" required="" placeholder="Ex: Maçon">
+            </div>
+            <div class="form-group">
+                <label for="weeklyDailySalary">Salaire Journalier (MRO) :</label>
+                <input type="number" id="weeklyDailySalary" required="" min="0" step="0.01" placeholder="Ex: 1000">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="submit-btn">Ajouter</button>
+            </div>
+        </form>
+    
+        <h2>Liste des Ouvriers (Hebdomadaire)</h2>
+        <table id="weekly-table">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Rôle</th>
+                    <th>Salaire Jour (MRO)</th>
+                    <th>Date de début</th>
+                    <th>Jours travaillés</th>
+                    <th>Salaire total (MRO)</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="6" style="text-align:right;">Total:</td>
+                    <td id="weekly-total">0 MRO</td>
+                </tr>
+            </tfoot>
+        </table>
+    
+        <div style="text-align:center;">
+            <button id="download-pdf-btn">Télécharger le PDF</button>
+        </div>
+    </div>
+
+    <!-- Section Réaliser Facture -->
+    <div class="container" id="invoice-container">
+        <h2>Réaliser une Facture</h2>
+        <form id="add-invoice-form">
+            <div class="form-group">
+                <label for="invoiceDescription">Description :</label>
+                <input type="text" id="invoiceDescription" required="" placeholder="Ex: Matériaux">
+            </div>
+            <div class="form-group">
+                <label for="invoiceAmount">Montant (MRO) :</label>
+                <input type="number" id="invoiceAmount" required="" min="0" step="0.01" placeholder="Ex: 5000">
+            </div>
+            <div class="form-group">
+                <label for="invoiceDate">Date :</label>
+                <input type="date" id="invoiceDate" required="">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="submit-btn">Ajouter</button>
+            </div>
+        </form>
+    
+        <h2>Liste des Factures</h2>
+        <table id="invoice-table">
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Montant (MRO)</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3" style="text-align:right;">Total:</td>
+                    <td id="invoice-total">0 MRO</td>
+                </tr>
+            </tfoot>
+        </table>
+    
+        <div style="text-align:center;">
+            <button id="download-invoice-pdf-btn">Télécharger le PDF</button>
+        </div>
+    </div>
+    
+    <div class="actions">
+        <button id="save-btn">Enregistrer toutes les données</button>
+    </div>
+    
+    <!-- Modal pour Ouvriers Hebdo -->
+    <div class="modal-overlay" id="modal-overlay-weekly">
+        <div class="modal">
+            <h3>Définir les jours travaillés</h3>
+            <div class="form-group">
+                <label for="weekStartDate">Date de début:</label>
+                <input type="date" id="weekStartDate">
+            </div>
+            <div class="form-group">
+                <label>Méthode :</label>
+                <label><input type="radio" name="method" value="manual" checked> Nombre de jours manuel</label>
+                <label><input type="radio" name="method" value="weekly"> Jours de la semaine</label>
+            </div>
+            <div class="form-group" id="manual-days">
+                <label for="manualDaysCount">Nombre de jours :</label>
+                <input type="number" id="manualDaysCount" min="0" placeholder="Ex: 10">
+            </div>
+            <div class="form-group week-days" id="week-days" style="display:none;">
+                <label>Jours travaillés:</label>
+                <div class="week-days">
+                    <label><input type="checkbox" value="1"> Lundi</label>
+                    <label><input type="checkbox" value="2"> Mardi</label>
+                    <label><input type="checkbox" value="3"> Mercredi</label>
+                    <label><input type="checkbox" value="4"> Jeudi</label>
+                    <label><input type="checkbox" value="5"> Vendredi</label>
+                    <label><input type="checkbox" value="6"> Samedi</label>
+                    <label><input type="checkbox" value="7"> Dimanche</label>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button id="cancelWeeklyModalBtn">Annuler</button>
+                <button id="confirmWeeklyModalBtn">Confirmer</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        let weeklyWorkers = [];
+        let invoices = [];
+        let selectedWeeklyWorkerIndex = null;
+
+        // Fonctions communes
+        function loadFromLocalStorage() {
+            const wData = localStorage.getItem('weeklyWorkersData');
+            if(wData) weeklyWorkers = JSON.parse(wData);
+            const iData = localStorage.getItem('invoicesData');
+            if(iData) invoices = JSON.parse(iData);
+        }
+    
+        function saveToLocalStorage() {
+            localStorage.setItem('weeklyWorkersData', JSON.stringify(weeklyWorkers));
+            localStorage.setItem('invoicesData', JSON.stringify(invoices));
+            alert("Données enregistrées avec succès !");
+        }
+    
+        function formatDateDisplay(dateStr) {
+            if(!dateStr) return "";
+            const d = new Date(dateStr);
+            if(isNaN(d.getTime())) return "";
+            const day = String(d.getDate()).padStart(2,'0');
+            const month = String(d.getMonth()+1).padStart(2,'0');
+            const year = d.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+
+        function loadImage(url) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.crossOrigin = 'Anonymous';
+                img.onload = () => resolve(img);
+                img.onerror = (e) => reject(e);
+                img.src = url;
+            });
+        }
+
+        // Section Ouvriers Hebdomadaires
+        function updateWeeklyTotal() {
+            let sum = 0;
+            weeklyWorkers.forEach((worker) => {
+                const workedDaysCount = worker.workedDaysCount || 0;
+                const totalSalary = workedDaysCount * worker.dailySalary;
+                sum += totalSalary;
+            });
+            const totalCell = document.getElementById('weekly-total');
+            totalCell.textContent = Math.round(sum) + " MRO";
+            return sum;
+        }
+    
+        function updateWeeklyTable() {
+            const tbody = document.querySelector('#weekly-table tbody');
+            tbody.innerHTML = '';
+    
+            weeklyWorkers.forEach((worker, index) => {
+                const tr = document.createElement('tr');
+    
+                const nameTd = document.createElement('td');
+                nameTd.textContent = worker.name;
+    
+                const roleTd = document.createElement('td');
+                roleTd.textContent = worker.role;
+    
+                const dailyTd = document.createElement('td');
+                dailyTd.textContent = Math.round(worker.dailySalary) + " MRO";
+    
+                const startDateTd = document.createElement('td');
+                startDateTd.textContent = worker.startWeekDate ? formatDateDisplay(worker.startWeekDate) : '';
+    
+                const daysWorkedTd = document.createElement('td');
+                daysWorkedTd.textContent = worker.workedDaysCount || 0;
+    
+                const totalSalary = (worker.workedDaysCount || 0) * worker.dailySalary;
+                const totalTd = document.createElement('td');
+                totalTd.textContent = Math.round(totalSalary) + " MRO";
+    
+                const actionTd = document.createElement('td');
+                const editBtn = document.createElement('button');
+                editBtn.textContent = "⚙️";
+                editBtn.classList.add('edit-btn');
+                editBtn.addEventListener('click', () => {
+                    selectedWeeklyWorkerIndex = index;
+                    showWeeklyModal(worker);
+                });
+    
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = "🗑️";
+                deleteBtn.classList.add('delete-btn');
+                deleteBtn.addEventListener('click', () => {
+                    weeklyWorkers.splice(index, 1);
+                    updateWeeklyTable();
+                });
+    
+                actionTd.appendChild(editBtn);
+                actionTd.appendChild(deleteBtn);
+    
+                tr.appendChild(nameTd);
+                tr.appendChild(roleTd);
+                tr.appendChild(dailyTd);
+                tr.appendChild(startDateTd);
+                tr.appendChild(daysWorkedTd);
+                tr.appendChild(totalTd);
+                tr.appendChild(actionTd);
+    
+                tbody.appendChild(tr);
+            });
+    
+            updateWeeklyTotal();
+        }
+    
+        const weeklyForm = document.getElementById('add-weekly-worker-form');
+        weeklyForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('weeklyName').value.trim();
+            const role = document.getElementById('weeklyRole').value.trim();
+            const dailySalary = parseFloat(document.getElementById('weeklyDailySalary').value);
+    
+            if(!name || !role || isNaN(dailySalary) || dailySalary < 0) {
+                alert("Veuillez renseigner correctement les informations.");
+                return;
+            }
+    
+            const newWorker = {
+                name: name,
+                role: role,
+                dailySalary: dailySalary,
+                startWeekDate: null,
+                workedDaysCount: 0
+            };
+    
+            weeklyWorkers.push(newWorker);
+            updateWeeklyTable();
+            weeklyForm.reset();
+        });
+
+        // Modal pour Ouvriers Hebdo
+        const modalOverlayWeekly = document.getElementById('modal-overlay-weekly');
+        const weekStartDateInput = document.getElementById('weekStartDate');
+        const manualDaysCountInput = document.getElementById('manualDaysCount');
+        const weekDaysDiv = document.getElementById('week-days');
+        const manualDaysDiv = document.getElementById('manual-days');
+        const methodRadios = document.querySelectorAll('input[name="method"]');
+        const cancelWeeklyModalBtn = document.getElementById('cancelWeeklyModalBtn');
+        const confirmWeeklyModalBtn = document.getElementById('confirmWeeklyModalBtn');
+        const daysCheckboxes = document.querySelectorAll('.week-days input[type="checkbox"]');
+    
+        methodRadios.forEach(radio => {
+            radio.addEventListener('change', () => {
+                if(radio.value === 'manual') {
+                    manualDaysDiv.style.display = 'block';
+                    weekDaysDiv.style.display = 'none';
+                } else {
+                    manualDaysDiv.style.display = 'none';
+                    weekDaysDiv.style.display = 'block';
+                }
+            });
+        });
+    
+        function showWeeklyModal(worker) {
+            weekStartDateInput.value = worker.startWeekDate || '';
+            manualDaysCountInput.value = worker.workedDaysCount || '';
+            daysCheckboxes.forEach((cb, idx) => {
+                cb.checked = worker.workedDays && worker.workedDays[idx] ? true : false;
+            });
+            modalOverlayWeekly.style.display = 'flex';
+        }
+    
+        function hideWeeklyModal() {
+            modalOverlayWeekly.style.display = 'none';
+            selectedWeeklyWorkerIndex = null;
+        }
+    
+        cancelWeeklyModalBtn.addEventListener('click', hideWeeklyModal);
+        confirmWeeklyModalBtn.addEventListener('click', () => {
+            if(selectedWeeklyWorkerIndex === null) return;
+            const worker = weeklyWorkers[selectedWeeklyWorkerIndex];
+    
+            const chosenDate = weekStartDateInput.value;
+            if(!chosenDate) {
+                alert("Veuillez sélectionner une date de début.");
+                return;
+            }
+    
+            const method = document.querySelector('input[name="method"]:checked').value;
+            if(method === 'manual') {
+                const daysCount = parseInt(manualDaysCountInput.value) || 0;
+                if(daysCount < 0) {
+                    alert("Le nombre de jours ne peut pas être négatif.");
+                    return;
+                }
+                worker.workedDaysCount = daysCount;
+                delete worker.workedDays;
+            } else {
+                let newWorkedDays = [];
+                daysCheckboxes.forEach(cb => {
+                    newWorkedDays.push(cb.checked);
+                });
+                worker.workedDays = newWorkedDays;
+                worker.workedDaysCount = newWorkedDays.filter(d => d).length;
+            }
+    
+            worker.startWeekDate = chosenDate;
+            updateWeeklyTable();
+            hideWeeklyModal();
+        });
+
+        // Section Factures
+        function updateInvoiceTotal() {
+            let sum = 0;
+            invoices.forEach((invoice) => {
+                sum += invoice.amount;
+            });
+            const totalCell = document.getElementById('invoice-total');
+            totalCell.textContent = Math.round(sum) + " MRO";
+            return sum;
+        }
+
+        function updateInvoiceTable() {
+            const tbody = document.querySelector('#invoice-table tbody');
+            tbody.innerHTML = '';
+
+            invoices.forEach((invoice, index) => {
+                const tr = document.createElement('tr');
+
+                const descTd = document.createElement('td');
+                descTd.textContent = invoice.description;
+
+                const amountTd = document.createElement('td');
+                amountTd.textContent = Math.round(invoice.amount) + " MRO";
+
+                const dateTd = document.createElement('td');
+                dateTd.textContent = formatDateDisplay(invoice.date);
+
+                const actionTd = document.createElement('td');
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = "🗑️";
+                deleteBtn.classList.add('delete-btn');
+                deleteBtn.addEventListener('click', () => {
+                    invoices.splice(index, 1);
+                    updateInvoiceTable();
+                });
+
+                actionTd.appendChild(deleteBtn);
+
+                tr.appendChild(descTd);
+                tr.appendChild(amountTd);
+                tr.appendChild(dateTd);
+                tr.appendChild(actionTd);
+
+                tbody.appendChild(tr);
+            });
+
+            updateInvoiceTotal();
+        }
+
+        const invoiceForm = document.getElementById('add-invoice-form');
+        invoiceForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const description = document.getElementById('invoiceDescription').value.trim();
+            const amount = parseFloat(document.getElementById('invoiceAmount').value);
+            const date = document.getElementById('invoiceDate').value;
+
+            if(!description || isNaN(amount) || amount < 0 || !date) {
+                alert("Veuillez renseigner correctement les informations.");
+                return;
+            }
+
+            const newInvoice = {
+                description: description,
+                amount: amount,
+                date: date
+            };
+
+            invoices.push(newInvoice);
+            updateInvoiceTable();
+            invoiceForm.reset();
+        });
+
+        // Téléchargement PDF Ouvriers
+        const downloadPdfBtn = document.getElementById('download-pdf-btn');
+        downloadPdfBtn.addEventListener('click', async () => {
+            let totalSum = updateWeeklyTotal();
+    
+            const weeklyTable = document.getElementById('weekly-table');
+            const clonedTable = weeklyTable.cloneNode(true);
+            clonedTable.querySelectorAll('td:last-child, th:last-child').forEach(el => el.remove());
+    
+            const tempContainer = document.createElement('div');
+            tempContainer.style.position = 'absolute';
+            tempContainer.style.left = '-9999px';
+            tempContainer.appendChild(clonedTable);
+            document.body.appendChild(tempContainer);
+    
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'pt', 'a4');
+    
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const pageHeight = pdf.internal.pageSize.getHeight();
+    
+            const imageUrl = "https://i.ibb.co/4JY3n4z/GSEG-ETP-pdf-1.jpg";
+            try {
+                const img = await loadImage(imageUrl);
+                pdf.addImage(img, 'JPEG', 0, 0, pageWidth, pageHeight, undefined, 'MEDIUM');
+            } catch (error) {
+                console.error("Erreur lors du chargement de l'image :", error);
+                alert("Impossible de charger l'image pour le PDF.");
+                document.body.removeChild(tempContainer);
+                return;
+            }
+    
+            pdf.setFont("times", "bold");
+            pdf.setFontSize(16);
+            pdf.setTextColor(0,0,0);
+            const today = new Date().toLocaleDateString('fr-FR');
+            pdf.text(`Facture du jour - ${today}`, 60, 180);
+    
+            try {
+                const canvas = await html2canvas(tempContainer, { scale: 2 });
+                const imgData = canvas.toDataURL('image/png');
+    
+                const startY = 225;
+                const imgProps = pdf.getImageProperties(imgData);
+                const pdfWidth = pageWidth - 100;
+                const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+                pdf.addImage(imgData, 'PNG', 50, startY, pdfWidth, pdfHeight);
+    
+                pdf.setFontSize(14);
+                pdf.setFont("times", "bold");
+                pdf.setTextColor(255,0,0);
+                const totalText = `Total: ${Math.round(totalSum)} MRO`;
+                const textWidth = pdf.getTextWidth(totalText);
+                const xPos = (pageWidth - textWidth) / 2;
+                pdf.text(totalText, xPos, startY + pdfHeight + 40);
+    
+                pdf.save("facture_ouvriers.pdf");
+            } catch (error) {
+                console.error("Erreur lors de la génération du canvas :", error);
+                alert("Une erreur est survenue lors de la génération du PDF.");
+            } finally {
+                document.body.removeChild(tempContainer);
+            }
+        });
+
+        // Téléchargement PDF Factures
+        const downloadInvoicePdfBtn = document.getElementById('download-invoice-pdf-btn');
+        downloadInvoicePdfBtn.addEventListener('click', async () => {
+            let totalSum = updateInvoiceTotal();
+    
+            const invoiceTable = document.getElementById('invoice-table');
+            const clonedTable = invoiceTable.cloneNode(true);
+            clonedTable.querySelectorAll('td:last-child, th:last-child').forEach(el => el.remove());
+    
+            const tempContainer = document.createElement('div');
+            tempContainer.style.position = 'absolute';
+            tempContainer.style.left = '-9999px';
+            tempContainer.appendChild(clonedTable);
+            document.body.appendChild(tempContainer);
+    
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'pt', 'a4');
+    
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const pageHeight = pdf.internal.pageSize.getHeight();
+    
+            const imageUrl = "https://i.ibb.co/4JY3n4z/GSEG-ETP-pdf-1.jpg";
+            try {
+                const img = await loadImage(imageUrl);
+                pdf.addImage(img, 'JPEG', 0, 0, pageWidth, pageHeight, undefined, 'MEDIUM');
+            } catch (error) {
+                console.error("Erreur lors du chargement de l'image :", error);
+                alert("Impossible de charger l'image pour le PDF.");
+                document.body.removeChild(tempContainer);
+                return;
+            }
+    
+            pdf.setFont("times", "bold");
+            pdf.setFontSize(16);
+            pdf.setTextColor(0,0,0);
+            const today = new Date().toLocaleDateString('fr-FR');
+            pdf.text(`Facture du jour - ${today}`, 60, 180);
+    
+            try {
+                const canvas = await html2canvas(tempContainer, { scale: 1.5 }); // Échelle réduite pour un tableau plus petit
+                const imgData = canvas.toDataURL('image/png');
+    
+                const startY = 225;
+                const imgProps = pdf.getImageProperties(imgData);
+                const pdfWidth = pageWidth - 150; // Réduction supplémentaire de la largeur pour un tableau plus compact
+                const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+                pdf.addImage(imgData, 'PNG', 75, startY, pdfWidth, pdfHeight); // Marges ajustées pour centrer
+    
+                pdf.setFontSize(14);
+                pdf.setFont("times", "bold");
+                pdf.setTextColor(255,0,0);
+                const totalText = `Total: ${Math.round(totalSum)} MRO`;
+                const textWidth = pdf.getTextWidth(totalText);
+                const xPos = (pageWidth - textWidth) / 2;
+                pdf.text(totalText, xPos, startY + pdfHeight + 40);
+    
+                pdf.save("facture_depenses.pdf");
+            } catch (error) {
+                console.error("Erreur lors de la génération du canvas :", error);
+                alert("Une erreur est survenue lors de la génération du PDF.");
+            } finally {
+                document.body.removeChild(tempContainer);
+            }
+        });
+    
+        const saveBtn = document.getElementById('save-btn');
+        saveBtn.addEventListener('click', saveToLocalStorage);
+    
+        loadFromLocalStorage();
+        updateWeeklyTable();
+        updateInvoiceTable();
+    });
+    </script>
+    </body></html>
